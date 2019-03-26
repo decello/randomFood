@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Haydi Rastgele</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<style>
+    #yolla
+    {
+        font-size : 20px;
+        height: 100px;
+        width: 200px;
+    }
+
+</style>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<body>
+<div id="centerdiv">
+    <p>Minimum Paket Tutarı</p>
+    <select id="minTutar">
+    <option value="">Hepsi</option>
+    <option value="35">35</option>
+    <option value="25">25</option>
+    <option value="15">15</option>
+</select>
+    <p>Puan</p>
+
+    <select id="puan">
+    <option value="">Hepsi</option>
+    <option value="7">+7</option>
+    <option value="8">+8</option>
+    <option value="9">+9</option>
+</select>
+
+    <p>Vale</p>
+    <select id="vale">
+    <option value="true">True</option>
+    <option value="false">False</option>
+</select>
+
+<button type="button" class="btn btn-outline-success" id="ara">Ara</button>
+<button id="yolla" class="btn btn-primary btn-lg"></button>
+
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script>
+    $(function() {
+        var choosenFood;
+        $('#ara').click(function () {
+            //console.log("clicked");
+            $.post('/list')
+                .done(function (returnValue) {
+                    //console.log(returnValue);
+                    var foodArray = [];
+                    for (var i=0 ; i < returnValue.accounts.length; i++)
+                    {
+                        console.log(returnValue.accounts.length);
+                        foodArray.push(returnValue.accounts[i].foodName);
+                        //console.log(returnValue.accounts[i].foodName);
+                    }
+                    console.log(foodArray);
+
+                    choosenFood = foodArray[Math.floor(Math.random()*foodArray.length)];
+
+                    console.log("choosen");
+                    console.log(choosenFood);
+                    console.log("choosen");
+                    document.getElementById("yolla").innerHTML = choosenFood;
+
+                })
+
+
+        });
+    //şişli merkez adres https://www.yemeksepeti.com/istanbul/arama#ors:fals|aid:02fecf06-19f4-4c20-a9e3-3358901eb3b7
+
+
+
+        var link =  "https://www.yemeksepeti.com/istanbul/arama#ors:fals|aid:02fecf06-19f4-4c20-a9e3-3358901eb3b7";
+
+        $('#yolla').click(function () {
+
+
+            if($('#minTutar').val() !== "" && $('#minTutar').val() !== null){
+                link += "|mbt:" + $('#minTutar').val();
+            }
+            if($('#puan').val() !== "" && $('#puan').val() !== null){
+                link += "|tp:" + $('#puan').val();
+            }
+            if($('#vale').val() !== "" && $('#vale').val() !== null){
+                link += "|vale:" + $('#vale').val();
+            }
+
+            link += '|st:' + choosenFood;
+
+            window.open(link , '_blank');
+
+        });
+
+
+
+
+
+    });
+</script>
+</html>
